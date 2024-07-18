@@ -1,0 +1,135 @@
+career.php
+
+<a href="#" class="show-in-map">смотреть на карте</a>
+
+  <div id="mapModal" class="modal">
+      <div class="modal-content">
+          <span class="close">&times;</span>
+          <div id="newMap" style="width: 100%; height: 400px;"></div>
+      </div>
+  </div>
+
+
+
+
+custom.js
+
+//popup
+ymaps.ready(function () {
+    let officeCoordinates = [43.253850, 76.924858],
+        mapOptions = {
+            center: officeCoordinates,
+            zoom: 15,
+            controls: ['smallMapDefaultSet'],
+        },
+        markOption = {
+            hideIconOnBalloonOpen: false,
+            iconImageHref: '/local/templates/slonworks/img/mark.png',
+            iconImageSize: [11, 11],
+            iconImageOffset: [0, -5],
+            balloonShadow: false,
+            balloonPanelMaxMapArea: 0,
+            iconLayout: 'default#image',
+            openBalloonOnClick: false
+        },
+        contacts = [
+            {
+                id: 0,
+                center: officeCoordinates,
+                title: 'SlonWorks',
+                balloonContent: 'Толе би 101',
+                hintContent: 'hi :)',
+                markOption: markOption
+            },
+        ];
+
+    let map;
+    let modal = document.getElementById('mapModal');
+    let btn = document.querySelector('.show-in-map');
+    let span = document.getElementsByClassName('close')[0];
+
+    // Добавляем обработчик клика на ссылку .show-in-map
+    btn.addEventListener('click', function(event) {
+        event.preventDefault();
+        modal.style.display = 'flex';
+
+        if (!map) {
+            map = new ymaps.Map('newMap', mapOptions);
+            map.geoObjects.add(new ymaps.Placemark(officeCoordinates, {
+                balloonContent: 'Толе би 101',
+                hintContent: 'hi :)'
+            }, markOption));
+        }
+    });
+
+    // Добавляем обработчик клика на кнопку закрытия .close
+    span.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    // Добавляем обработчик клика на фоновую область модального окна
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+
+
+
+custom.css
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7); /* Затемненный фон */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+}
+
+.close {
+    color: grey;
+    float: right;
+    font-size: 28px;
+    font-weight: 400;
+    position: absolute;
+    right: 0;
+    top: -45px;
+    z-index:5000;
+}
+
+.close:hover,
+.close:focus {
+    color: #aaa;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media (max-width: 720px) {
+    .modal-content {
+        width: 90%;
+        margin: 20% auto;
+        padding: 10px;
+    }
+    #newMap {
+        height: 300px;
+    }
+    .close {
+        right: 10px;
+    }
+}
+
+
+
+
